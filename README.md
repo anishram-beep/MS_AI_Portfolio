@@ -34,13 +34,27 @@ End-to-end NLP + financial modeling pipeline combining FinBERT sentiment, text f
 **Skills:** NLP, FinBERT, spaCy, Random Forest, Gradient Boosting, Python  
 **Folder:** `Earnings Sentiment & Financial Signal Prediction (FinBERT)`
 
-### 5. Responsible AI Multi-Agent Architecture for Autonomous Vehicles
+### 5. Low-Light Deer Detection using Image Enhancement
+
+This project explores improving object detection performance in low-light and nighttime conditions using preprocessing techniques.
+
+🔧 Approach
+YOLOv8 baseline model
+Tested preprocessing methods:
+CLAHE (contrast enhancement)
+Gamma correction (brightness adjustment)
+Gaussian smoothing (noise reduction)
+
+**Skills:** CLAHE, Gaussian Smoothing, Filtering Tecniques, Denoising, Gamma Correction, YOLOv8 
+**Folder:** `Low-Light-DeerDetection
+
+### 6. Responsible AI Multi-Agent Architecture for Autonomous Vehicles
 Safety-oriented autonomous vehicle architecture focused on perception confidence monitoring and fail-safe override logic in simulated settings.
 
 **Skills:** AI Safety, Simulation, Multi-Agent Systems, Autonomous Systems  
 **Folder:** `RAI_MultiAgentArch_AutonomousCar`
 
-### 6. Truck Delivery Optimization
+### 7. Truck Delivery Optimization
 Software project for package delivery optimization using object-oriented design and route-planning logic.
 
 **Skills:** Algorithms, OOP, Python, Optimization  
@@ -52,6 +66,7 @@ Software project for package delivery optimization using object-oriented design 
 - `Comp_Vision_Proj` — image restoration and computer vision work
 - `DeepLearning_Projects` — deep learning coursework and experiments
 - `Earnings Sentiment & Financial Signal Prediction (FinBERT)` — NLP + finance ML
+-  Low-Light Deer Detection - Computer Vision/Image Processing
 - `RAI_MultiAgentArch_AutonomousCar` — AI safety and AV system design
 - `Truck_DeliveryOptimization` — algorithmic route optimization
 
