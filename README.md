@@ -42,11 +42,12 @@ This project explores improving object detection performance in low-light and ni
 YOLOv8 baseline model
 Tested preprocessing methods:
 CLAHE (contrast enhancement)
+Retinex (Uneven Lighting)
 Gamma correction (brightness adjustment)
 Gaussian smoothing (noise reduction).
 
 **Skills:** CLAHE, Gaussian Smoothing, Filtering Tecniques, Denoising, Gamma Correction, YOLOv8
-**Folder:** `Low-Light_DeerDetection
+**Folder:** `Low-Light_DeerDetection`
 
 ### 6. Responsible AI Multi-Agent Architecture for Autonomous Vehicles
 Safety-oriented autonomous vehicle architecture focused on perception confidence monitoring and fail-safe override logic in simulated settings.
