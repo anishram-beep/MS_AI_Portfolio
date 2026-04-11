@@ -67,7 +67,7 @@ Software project for package delivery optimization using object-oriented design 
 - `Comp_Vision_Proj` — image restoration and computer vision work
 - `DeepLearning_Projects` — deep learning coursework and experiments
 - `Earnings Sentiment & Financial Signal Prediction (FinBERT)` — NLP + finance ML
--  Low-Light Deer Detection - Computer Vision/Image Processing
+-  Low-Light Deer Detection` - Computer Vision/Image Processing
 - `RAI_MultiAgentArch_AutonomousCar` — AI safety and AV system design
 - `Truck_DeliveryOptimization` — algorithmic route optimization
 
