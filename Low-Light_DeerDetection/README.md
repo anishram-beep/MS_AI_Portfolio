@@ -10,7 +10,8 @@ A YOLOv8-based object detection model was used as the baseline. Several preproce
 
 - **Gamma Correction** – global brightness enhancement  
 - **CLAHE (Contrast Limited Adaptive Histogram Equalization)** – local contrast enhancement  
-- **Gaussian Smoothing** – noise reduction prior to enhancement  
+- **Gaussian Smoothing** – noise reduction prior to enhancement
+- **Baseline Dataset** - https://www.kaggle.com/datasets/winnerbishal/deer-cameratraps
 
 ---
 
