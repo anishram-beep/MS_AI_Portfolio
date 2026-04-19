@@ -21,7 +21,7 @@ I designed a conceptual multi-agent system that:
 
 ## Files
 - `RAI-Multi-Agent_Autonomous.pdf` — project paper/writeup
-- `RAI-Multi-Agent_Autonomous.pdf` — Rough Draft Proposal
+- `Rai Multi-agent Av Safety Architecture Deliverable_ROUGH` — Rough Draft Proposal
 
 ## Key Takeaways
 - Explored how safety and uncertainty can be integrated into AV system design
