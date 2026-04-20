@@ -45,7 +45,7 @@ The following preprocessing techniques were tested:
 
 Raw input:
 
-![Raw Input](./raw_input.jpg)
+
 
 Enhanced (Gamma + Gaussian + CLAHE):
 
@@ -57,15 +57,15 @@ Enhanced (Gamma + Gaussian + CLAHE):
 
 ### 🔹 Case B: Retinex Failure Case
 
-![Retinex Failure](./gaussian_retinex_input.jpg)
+
 
 👉 In very low-signal, high-noise scenes, Retinex amplified noise and flattened structure, leading to poor detection performance.
 
 ---
 
 ### 🔹 Case C: Retinex Refinement Case
-
-![Retinex Success](./gamma_retinex_input.jpg)
+![Raw Input](./raw_input.jpg)
+![Retinex Success](./retinex_input.jpg)
 
 👉 In scenes with strong illumination imbalance (bright foreground, dark background), Retinex improved lighting consistency and slightly increased detection confidence.
 
