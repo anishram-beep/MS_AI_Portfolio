@@ -102,9 +102,6 @@ Applying Gaussian smoothing before CLAHE reduces noise amplification and improve
 
 ## 🧠 Core Insight
 
-Instead of asking:
-
-> “Which preprocessing method is best?”
 
 This project shows:
 
