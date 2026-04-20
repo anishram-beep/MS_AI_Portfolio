@@ -44,7 +44,7 @@ The following preprocessing techniques were tested:
 ### 🔹 Case A: Extreme Low-Light Recovery
 
 Raw input:
-
+![Raw Input](./loc_0081_im_000387.jpg)
 
 
 Enhanced (Gamma + Gaussian + CLAHE):
