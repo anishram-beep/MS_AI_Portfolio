@@ -1,80 +1,171 @@
-#  Low-Light Deer Detection using Image Enhancement
+# 🚗 Low-Light Deer Detection using Image Enhancement
 
-This project explores improving object detection performance in **low-light and nighttime environments** using image preprocessing techniques.
+This project explores improving object detection performance in **low-light and nighttime conditions** using image preprocessing techniques with a **YOLOv8 baseline detector**.
 
----
-
-##  Approach
-
-A YOLOv8-based object detection model was used as the baseline. Several preprocessing methods were evaluated to improve detection under poor visibility conditions:
-
-- **Gamma Correction** – global brightness enhancement  
-- **CLAHE (Contrast Limited Adaptive Histogram Equalization)** – local contrast enhancement  
-- **Gaussian Smoothing** – noise reduction prior to enhancement
-- **Baseline Dataset** - https://www.kaggle.com/datasets/winnerbishal/deer-cameratraps
+The goal is to understand **when preprocessing helps, when it hurts, and why**, particularly in challenging infrared/nighttime wildlife scenes relevant to autonomous perception systems.
 
 ---
 
-##  Key Insight
+## 🔧 Project Focus
 
-In extremely low-light conditions, **gamma correction significantly improves detection**, while CLAHE alone can fail due to amplification of background noise.
+Low-light deer detection is difficult due to:
 
-> Global brightness enhancement is more effective than local contrast enhancement in severely underexposed scenes.
+- extremely low visibility
+- high noise levels
+- poor object-background separation
+- uneven infrared illumination
+- cluttered natural environments
 
----
-
-##  Example Result
-
-### Raw Image (No Detection)
-- Extremely low visibility  
-- Deer is barely distinguishable  
-
-![Raw Image](raw_input.jpg)
+Rather than assuming one preprocessing method works universally, this project evaluates how different enhancement techniques impact detection under varying conditions.
 
 ---
 
-### Gamma / Enhanced Image (Detection)
-- Deer successfully detected  
-- Confidence improved under low-light conditions  
+## 🧪 Methods Evaluated
 
-![Enhanced Image](gamma_gaussian_clahe_input.jpg)
+The following preprocessing techniques were tested:
 
----
+- **Gamma Correction** – improves brightness in extremely dark scenes  
+- **CLAHE (Contrast Limited Adaptive Histogram Equalization)** – enhances local contrast  
+- **Gaussian Smoothing** – reduces noise before contrast enhancement  
+- **Retinex-based Enhancement** – normalizes uneven illumination  
 
-##  Observations
+### Example Pipelines
 
-- Low-light images primarily suffer from **lack of signal**, not just contrast  
-- CLAHE can degrade performance in noisy scenes by amplifying irrelevant features  
-- Gaussian smoothing can help stabilize CLAHE, but **does not replace brightness correction**  
-- Detection performance is highly sensitive in edge-case scenarios  
-
----
-
-##  Future Work
-
-- Evaluate preprocessing on a **low-light subset of the dataset**  
-- Develop **adaptive preprocessing pipelines** based on scene conditions  
-- Improve robustness under **occlusion and partial visibility**  
-- Explore temporal methods (video-based detection)  
+- Gamma → YOLOv8  
+- Gamma → Gaussian → CLAHE → YOLOv8  
+- Retinex → YOLOv8  
+- Retinex → CLAHE → YOLOv8  
+- Gamma → Retinex → YOLOv8  
 
 ---
 
-##  Tech Stack
+## 🖼️ Qualitative Results
+
+### 🔹 Case A: Extreme Low-Light Recovery
+
+Raw input:
+
+![Raw Input](./raw_input.jpg)
+
+Enhanced (Gamma + Gaussian + CLAHE):
+
+![Enhanced Input](./gamma_gaussian_clahe_input.jpg)
+
+👉 In extremely dark scenes, **gamma-based pipelines recovered usable signal**, enabling more reliable detection compared to CLAHE alone.
+
+---
+
+### 🔹 Case B: Retinex Failure Case
+
+![Retinex Failure](./gaussian_retinex_input.jpg)
+
+👉 In very low-signal, high-noise scenes, Retinex amplified noise and flattened structure, leading to poor detection performance.
+
+---
+
+### 🔹 Case C: Retinex Refinement Case
+
+![Retinex Success](./gamma_retinex_input.jpg)
+
+👉 In scenes with strong illumination imbalance (bright foreground, dark background), Retinex improved lighting consistency and slightly increased detection confidence.
+
+---
+
+## 📊 Key Findings
+
+### 1. Gamma Correction is Most Effective for Very Dark Images
+Gamma consistently improved detection when the scene had extremely low signal.
+
+---
+
+### 2. CLAHE Helps Only When Structure Exists
+CLAHE enhances edges and contrast, but can amplify noise if the image lacks meaningful structure.
+
+---
+
+### 3. Gaussian + CLAHE is More Stable
+Applying Gaussian smoothing before CLAHE reduces noise amplification and improves stability.
+
+---
+
+### 4. Retinex is Condition-Dependent
+- Works well for **uneven lighting**
+- Fails in **extremely noisy / low-signal environments**
+
+---
+
+### 5. Preprocessing is Not Universally Beneficial
+
+> Enhancement only helps when there is **recoverable visual structure**
+
+---
+
+## 🧠 Core Insight
+
+Instead of asking:
+
+> “Which preprocessing method is best?”
+
+This project shows:
+
+> **Performance depends on the interaction between image conditions and preprocessing choice**
+
+---
+
+## 🧪 Experimental Setup
+
+- Model: YOLOv8 (Ultralytics)
+- Training: baseline + preprocessing variations
+- Evaluation:
+  - detection presence
+  - bounding box accuracy
+  - confidence scores
+  - qualitative comparison across pipelines
+
+---
+
+## 🛠️ Files
+
+- `Base_train.py` → YOLOv8 baseline training  
+- `Clahe_train.py` → CLAHE-based training experiments  
+- `test.py` → initial preprocessing comparisons  
+- `test4.py` → extended pipeline including Retinex experiments  
+
+---
+
+## 🧠 Technical Stack
 
 - Python  
 - OpenCV  
 - Ultralytics YOLOv8  
+- Image Processing & Filtering  
 
 ---
 
-## 📁 Files
+## 🚀 Future Work
 
-- `Base_train.py` – baseline YOLO training  
-- `Clahe_train.py` – CLAHE preprocessing experiments  
-- `test.py` – inference and evaluation  
+- Adaptive preprocessing based on brightness/noise estimation  
+- Train separate models for low-light vs balanced lighting  
+- Integrate preprocessing into training pipeline  
+- Evaluate larger datasets with structured benchmarking  
 
 ---
 
-##  Summary
+## 📌 Summary
 
-This project demonstrates how targeted preprocessing can convert a **failure case into a successful detection**, highlighting the importance of handling real-world conditions such as low visibility and noise in computer vision systems.
+This project demonstrates that:
+
+- **Gamma correction** is best for extremely dark scenes  
+- **CLAHE + Gaussian** improves stability when structure exists  
+- **Retinex** is useful for illumination imbalance, not noise-heavy scenes  
+
+The key takeaway:
+
+> Robust low-light detection requires **condition-aware preprocessing**, not a one-size-fits-all approach.
+
+---
+
+## 🔗 Repository
+
+Full portfolio:  
+https://github.com/anishram-beep/MS_AI_Portfolio
