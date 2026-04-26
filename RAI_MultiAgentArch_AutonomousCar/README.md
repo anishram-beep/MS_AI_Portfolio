@@ -13,6 +13,9 @@ I designed a conceptual multi-agent system that:
 - triggers fail-safe override behavior
 - embeds safety logic directly into the decision pipeline
 
+
+Designed a hybrid multi-agent architecture integrating perception uncertainty, probabilistic risk modeling, and safety constraints for real-time autonomous decision-making.
+
 - <img width="1122" height="1402" alt="ChatGPT Image Apr 26, 2026, 12_05_34 PM" src="https://github.com/user-attachments/assets/9c7f3394-df28-4700-b841-9888feb37385" />
 
 
