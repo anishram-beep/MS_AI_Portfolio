@@ -28,6 +28,7 @@ Designed a hybrid multi-agent architecture integrating perception uncertainty, p
 ## Files
 - `RAI-Multi-Agent_Autonomous.pdf` — project paper/writeup
 - `Rai Multi-agent Av Safety Architecture Deliverable_ROUGH` — Rough Draft Proposal
+- 'Responsible_Multi_Agent_AV_Architecture (1).pdf' - Final Presentation Slides
 
 ## Key Takeaways
 - Explored how safety and uncertainty can be integrated into AV system design
