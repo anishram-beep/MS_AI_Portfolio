@@ -17,7 +17,7 @@ IMPROVED_ADAPTIVE_DIR = Path(r"C:\Users\anish\PycharmProjects\DeerDetectionProje
 
 DARK_THRESHOLD = 90.0
 UNEVEN_ILLUM_THRESHOLD = 40.0
-IOU_FAILURE_THRESHOLD = 0.58
+IOU_FAILURE_THRESHOLD = 0.56
 
 CLAHE_CLIP_LIMIT = 0.20
 CLAHE_TILE_GRID = (8, 8)
@@ -102,6 +102,28 @@ def apply_gamma(image, gamma=1.15):
     ]).astype("uint8")
     return cv2.LUT(image, table)
 
+def apply_selective_gamma(image, gamma=1.2, threshold=100):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # mask: dark regions
+    mask = gray < threshold
+
+    # gamma correction (global)
+    inv_gamma = 1.0 / gamma
+    table = np.array([
+        ((i / 255.0) ** inv_gamma) * 255 for i in np.arange(256)
+    ]).astype("uint8")
+
+    gamma_img = cv2.LUT(image, table)
+
+    # copy original
+    result = image.copy()
+
+    # apply gamma only where mask is true
+    result[mask] = gamma_img[mask]
+
+    return result
+
 def apply_retinex_ssr(image, sigma=20, gain=80.0, offset=128.0):
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
@@ -146,20 +168,26 @@ def adaptive_preprocess(image):
     elif condition == "dark_uneven":
         # test gamma + very gentle Retinex
         processed = apply_gamma(image, 1.1)
+        processed = apply_selective_gamma(processed, 1.2, threshold=115)
         processed = apply_gaussian_blur(processed)
         processed = apply_clahe(processed)
         method = "gamma_gaussian_clahe_dark"
 
     elif condition == "uneven":
         # optional: gentle Retinex ablation
-       #processed = apply_gamma(image, 1.05)
+        processed = apply_selective_gamma(image, 1.05, threshold=115)
+
         #processed = apply_gaussian_blur(processed)
         #processed = apply_clahe2(processed)
 
 
-        retinex_version = apply_retinex_ssr(image, sigma=80, gain=15.0)
+       # processed = apply_retinex_ssr(processed, sigma=80, gain=15.0)
 
-        method = "gamma_gaussian_clahe_dark"
+       # processed = apply_gamma(image, 1.1)
+       # processed = apply_gaussian_blur(processed)
+      #  processed = apply_clahe(processed)
+
+        method = "selective_gamma_uneven"
 
     else:
         processed = image.copy()
