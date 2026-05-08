@@ -17,11 +17,15 @@ IMPROVED_ADAPTIVE_DIR = Path(r"C:\Users\anish\PycharmProjects\DeerDetectionProje
 
 DARK_THRESHOLD = 90.0
 UNEVEN_ILLUM_THRESHOLD = 40.0
-IOU_FAILURE_THRESHOLD = 0.50
+IOU_FAILURE_THRESHOLD = 0.58
 
-CLAHE_CLIP_LIMIT = 0.3
+CLAHE_CLIP_LIMIT = 0.20
 CLAHE_TILE_GRID = (8, 8)
-GAMMA_VALUE = 1
+
+CLAHE_CLIP_LIMIT_2 = 0.10
+CLAHE_TILE_GRID_2 = (8, 8)
+
+GAMMA_VALUE = 1.1
 
 GAUSSIAN_KERNEL = (3, 3)
 GAUSSIAN_SIGMA = 0
@@ -45,12 +49,19 @@ def classify_image_condition(image):
     b = brightness_score(image)
     u = uneven_illumination_score(image)
 
-    if b < DARK_THRESHOLD:
-        return "dark", b, u
-    if u > UNEVEN_ILLUM_THRESHOLD:
-        return "uneven", b, u
-    return "normal", b, u
+    is_dark = b < DARK_THRESHOLD
+    is_uneven = u > UNEVEN_ILLUM_THRESHOLD
 
+    if is_dark and is_uneven:
+        condition = "dark_uneven"
+    elif is_dark:
+        condition = "dark"
+    elif is_uneven:
+        condition = "uneven"
+    else:
+        condition = "normal"
+
+    return condition, b, u
 
 def apply_gaussian_blur(image):
     return cv2.GaussianBlur(image, GAUSSIAN_KERNEL, GAUSSIAN_SIGMA)
@@ -70,6 +81,20 @@ def apply_clahe(image):
     return cv2.cvtColor(merged, cv2.COLOR_LAB2BGR)
 
 
+def apply_clahe2(image):
+    lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+
+    clahe = cv2.createCLAHE(
+        clipLimit=CLAHE_CLIP_LIMIT_2,
+        tileGridSize=CLAHE_TILE_GRID_2
+    )
+
+    l_clahe = clahe.apply(l)
+    merged = cv2.merge((l_clahe, a, b))
+    return cv2.cvtColor(merged, cv2.COLOR_LAB2BGR)
+
+
 def apply_gamma(image, gamma=1.15):
     inv_gamma = 1.0 / gamma
     table = np.array([
@@ -77,20 +102,68 @@ def apply_gamma(image, gamma=1.15):
     ]).astype("uint8")
     return cv2.LUT(image, table)
 
+def apply_retinex_ssr(image, sigma=20, gain=80.0, offset=128.0):
+    lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
 
-def adaptive_preprocess(image):
+    l_float = l.astype(np.float32) + 1.0
+    blur = cv2.GaussianBlur(l_float, (0, 0), sigma)
+
+    retinex = np.log(l_float) - np.log(blur + 1.0)
+    retinex = gain * retinex + offset
+    retinex = np.clip(retinex, 0, 255).astype(np.uint8)
+
+    merged = cv2.merge((retinex, a, b))
+    return cv2.cvtColor(merged, cv2.COLOR_LAB2BGR)
+
+
+
+def adaptive_preprocess2(image):
     condition, b, u = classify_image_condition(image)
+
+     # Your best-performing stable pipeline
 
     processed = apply_gamma(image, GAMMA_VALUE)
     processed = apply_gaussian_blur(processed)
     processed = apply_clahe(processed)
+    method = "gamma_gaussian_clahe_dark"
+
+
+
+
+    return processed, condition, method, b, u
+
+def adaptive_preprocess(image):
+    condition, b, u = classify_image_condition(image)
 
     if condition == "dark":
+        # your best, stable pipeline
+        processed = apply_gamma(image, 1.1)
+        processed = apply_gaussian_blur(processed)
+        processed = apply_clahe(processed)
         method = "gamma_gaussian_clahe_dark"
+
+    elif condition == "dark_uneven":
+        # test gamma + very gentle Retinex
+        processed = apply_gamma(image, 1.1)
+        processed = apply_gaussian_blur(processed)
+        processed = apply_clahe(processed)
+        method = "gamma_gaussian_clahe_dark"
+
     elif condition == "uneven":
-        method = "gamma_gaussian_clahe_uneven"
+        # optional: gentle Retinex ablation
+       #processed = apply_gamma(image, 1.05)
+        #processed = apply_gaussian_blur(processed)
+        #processed = apply_clahe2(processed)
+
+
+        retinex_version = apply_retinex_ssr(image, sigma=80, gain=15.0)
+
+        method = "gamma_gaussian_clahe_dark"
+
     else:
-        method = "gamma_gaussian_clahe"
+        processed = image.copy()
+        method = "raw"
 
     return processed, condition, method, b, u
 
@@ -238,7 +311,7 @@ def build_failed_only_datasets():
 
         condition, b, u = classify_image_condition(image)
 
-        if condition not in {"dark", "uneven"}:
+        if condition not in {"dark", "dark_uneven" , "uneven"}:
             continue
 
         raw_status, raw_conf, raw_iou = detection_status_iou(
